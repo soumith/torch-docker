@@ -4,9 +4,14 @@ RUN apt-get update
 ###############################
 #### Install dependencies for torch
 ###############################
-RUN apt-get install -y python-software-properties
-RUN add-apt-repository ppa:chris-lea/zeromq
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+RUN apt-get dist-upgrade -y
+RUN apt-get -y dist-upgrade
+RUN apt-get -y install python-software-properties
+RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:chris-lea/node.js
+RUN apt-add-repository ppa:chris-lea/zeromq
 RUN apt-get update
 RUN apt-get install -y build-essential
 RUN apt-get install -y gcc g++
@@ -24,23 +29,18 @@ RUN apt-get install -y gfortran
 RUN apt-get install -y unzip
 RUN apt-get install -y gnuplot
 RUN apt-get install -y gnuplot-x11
-RUN add-apt-repository ppa:chris-lea/zeromq
 RUN apt-get update
-RUN cd /tmp/
-RUN git clone https://github.com/xianyi/OpenBLAS.git
-RUN cd OpenBLAS
-RUN make NO_AFFINITY=1 USE_OPENMP=1
-RUN make install
+RUN git clone https://github.com/xianyi/OpenBLAS.git /tmp/OpenBLAS
+RUN cd /tmp/OpenBLAS && make NO_AFFINITY=1 USE_OPENMP=1 && make install
 ###########################################
 ### Now install torch
 ###########################################
-RUN export CMAKE_LIBRARY_PATH=/opt/OpenBLAS/include:/opt/OpenBLAS/lib:$CMAKE_LIBRARY_PATH
-RUN export PATH=/usr/local/bin:$PATH
-RUN cd /tmp
-RUN git clone https://github.com/torch/luajit-rocks.git
-RUN cd luajit-rocks
+ENV CMAKE_LIBRARY_PATH /opt/OpenBLAS/include:/opt/OpenBLAS/lib:$CMAKE_LIBRARY_PATH
+ENV PATH /usr/local/bin:$PATH
+RUN git clone https://github.com/torch/luajit-rocks.git /tmp/luajit-rocks
+WORKDIR /tmp/luajit-rocks
 RUN mkdir build; 
-RUN cd build
+WORKDIR /tmp/luajit-rocks/build
 RUN git checkout master; 
 RUN git pull
 RUN rm -f CMakeCache.txt
