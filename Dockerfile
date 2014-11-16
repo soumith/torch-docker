@@ -74,3 +74,4 @@ RUN luarocks install argcheck
 RUN luarocks install audio
 RUN luarocks install signal
 RUN luarocks install gfx.js
+ENV LD_LIBRARY_PATH /usr/local/lib:/opt/OpenBLAS/lib:$LD_LIBRARY_PATH
