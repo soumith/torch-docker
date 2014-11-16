@@ -10,8 +10,6 @@ RUN apt-get dist-upgrade -y
 RUN apt-get -y dist-upgrade
 RUN apt-get -y install python-software-properties
 RUN apt-get -y install software-properties-common
-RUN add-apt-repository ppa:chris-lea/node.js
-RUN apt-add-repository ppa:chris-lea/zeromq
 RUN apt-get update
 RUN apt-get install -y build-essential
 RUN apt-get install -y gcc g++
@@ -24,11 +22,16 @@ RUN apt-get install -y libjpeg-dev
 RUN apt-get install -y libpng-dev
 RUN apt-get install -y ncurses-dev
 RUN apt-get install -y imagemagick
-RUN apt-get install -y libzmq-dev
+RUN apt-get install -y libzmq3-dev
 RUN apt-get install -y gfortran
 RUN apt-get install -y unzip
 RUN apt-get install -y gnuplot
 RUN apt-get install -y gnuplot-x11
+RUN apt-get install -y libsdl2-dev
+RUN apt-get install -y libgraphicsmagick1-dev
+RUN apt-get install -y nodejs
+RUN apt-get install -y npm
+RUN apt-get install -y libfftw3-dev sox libsox-dev libsox-fmt-all
 RUN apt-get update
 RUN git clone https://github.com/xianyi/OpenBLAS.git /tmp/OpenBLAS
 RUN cd /tmp/OpenBLAS && make NO_AFFINITY=1 USE_OPENMP=1 && make install
@@ -44,7 +47,7 @@ WORKDIR /tmp/luajit-rocks/build
 RUN git checkout master; 
 RUN git pull
 RUN rm -f CMakeCache.txt
-RUN cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DWITH_LUAJIT21=ON
 RUN make
 RUN make install
 RUN luarocks install sundown       
@@ -65,3 +68,9 @@ RUN luarocks install optim
 RUN luarocks install lua-cjson  
 RUN luarocks install trepl      
 RUN luarocks install nnx
+RUN luarocks install threads
+RUN luarocks install graphicsmagick
+RUN luarocks install argcheck
+RUN luarocks install audio
+RUN luarocks install signal
+RUN luarocks install gfx.js
