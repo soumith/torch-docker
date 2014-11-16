@@ -1,4 +1,3 @@
 torch-docker
 ============
-
-NOT READY YET, just trying out
+Dockerfile to create an image for Torch7
